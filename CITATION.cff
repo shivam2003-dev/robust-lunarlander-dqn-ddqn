@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this implementation, please cite this repository."
+title: "Robust LunarLander: DQN vs. DDQN under Stochastic Action Failure"
+type: software
+authors:
+  - family-names: "Kumar"
+    given-names: "Shivam"
+  - family-names: "Bapaji"
+    given-names: "Nunna Swahan"
+  - family-names: "Garimella"
+    given-names: "Nikhitha"
+  - family-names: "Aishwarya"
+    given-names: "S H"
+  - family-names: "Telee"
+    given-names: "Omkareshwar Vaijanath"
+version: 1.0.0
+date-released: 2026-07-19
+license: MIT
+repository-code: "https://github.com/shivam2003-dev/robust-lunarlander-dqn-ddqn"
+keywords:
+  - reinforcement learning
+  - DQN
+  - Double DQN
+  - LunarLander
+  - stochastic action failure

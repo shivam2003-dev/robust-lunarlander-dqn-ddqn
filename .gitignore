@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+dist/
+build/
+*.egg-info/
+tmp/
+artifacts/study-smoke/
+artifacts/training-benchmark/
+artifacts/verification-smoke/
+output/pdf/rendered/
+.DS_Store
+/Assignment 2-v2.docx
+/txt

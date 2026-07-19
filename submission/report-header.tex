@@ -1,0 +1,42 @@
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{fvextra}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+
+\definecolor{MidnightBlue}{HTML}{153E75}
+\definecolor{SectionBlue}{HTML}{1D4ED8}
+\definecolor{SoftGray}{HTML}{475569}
+
+\sectionfont{\color{SectionBlue}}
+\subsectionfont{\color{MidnightBlue}}
+\captionsetup{font=small,labelfont=bf}
+\setlist{nosep,leftmargin=1.6em}
+\setlength{\LTpre}{0.5em}
+\setlength{\LTpost}{0.8em}
+\renewcommand{\arraystretch}{1.12}
+\setlength{\emergencystretch}{3em}
+
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  breaklines=true,
+  breakanywhere=true,
+  commandchars=\\\{\},
+  fontsize=\scriptsize
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Group 148 - Robust LunarLander}
+\fancyhead[R]{\small DQN vs. DDQN}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\AtBeginEnvironment{longtable}{\small}
+\AtEndEnvironment{longtable}{\normalsize}

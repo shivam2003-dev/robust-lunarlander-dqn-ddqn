@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-07-19T21:36:41+05:30",
+  "seed": 148,
+  "python_version": "3.13.12",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "gymnasium_version": "1.2.3",
+  "random_policy": {
+    "episodes": 250,
+    "total_steps": 21917,
+    "attempted_thruster_actions": 16465,
+    "misfired_thruster_actions": 2502,
+    "observed_misfire_rate": 0.15195870027330702,
+    "target_misfire_rate": 0.15,
+    "misfire_rate_absolute_error": 0.0019587002733070236,
+    "misfire_rate_wilson_95_low": 0.1465566657316112,
+    "misfire_rate_wilson_95_high": 0.15752310037352057,
+    "target_inside_wilson_interval": true,
+    "fuel_penalty_checks": 16465,
+    "fuel_penalty_mismatches": 0,
+    "info_identity_mismatches": 0,
+    "unexpected_action_replacements": 0,
+    "safe_landings_observed_under_random_policy": 8,
+    "passed": true
+  },
+  "controlled_boundary_cases": {
+    "count": 10,
+    "passed": 10,
+    "all_passed": true
+  },
+  "overall_passed": true
+}
