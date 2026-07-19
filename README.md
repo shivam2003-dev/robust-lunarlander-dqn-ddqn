@@ -72,6 +72,15 @@ platforms.
 | output/pdf | Single PDF submission artifact |
 | docs/virtual_lab_runbook.md | Timestamped virtual-lab execution procedure |
 
+## Learn the ideas
+
+- [First-principles story: The Flight Computer That Learned to Doubt Its Own Confidence](docs/first_principles_story.md)
+  explains Q-learning, DQN, DDQN, maximization bias, hidden actuator failure,
+  reward design, and fair evaluation as one narrative.
+- [Reading and watch list](docs/reading_list.md) provides an ordered path through
+  the best book chapters, primary papers, official tutorials, a YouTube lecture,
+  a free course, and follow-up experiments.
+
 ## Evidence discipline
 
 The report labels training observations as empirical evidence and treats
