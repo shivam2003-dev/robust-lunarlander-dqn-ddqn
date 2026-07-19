@@ -8,7 +8,7 @@ local-machine or GitHub Actions capture as virtual-lab evidence.
 
 Clone the final repository and enter it:
 
-    git clone REPLACE_WITH_FINAL_REPOSITORY_URL
+    git clone https://github.com/shivam2003-dev/robust-lunarlander-dqn-ddqn.git
     cd robust-lunarlander-dqn-ddqn
     uv sync --extra dev
     source .venv/bin/activate
