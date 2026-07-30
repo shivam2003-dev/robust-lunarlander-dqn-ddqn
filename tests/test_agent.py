@@ -35,7 +35,8 @@ def make_batch() -> ReplayBatch:
         actions=torch.zeros((2, 1), dtype=torch.int64),
         rewards=torch.zeros((2, 1)),
         next_observations=torch.zeros((2, 8)),
-        dones=torch.zeros((2, 1)),
+        terminated=torch.zeros((2, 1)),
+        truncated=torch.zeros((2, 1)),
     )
 
 
@@ -59,6 +60,20 @@ def test_ddqn_selects_online_action_and_evaluates_it_with_target_network() -> No
     assert values.tolist() == [[2.0], [2.0]]
 
 
+def test_targets_mask_termination_but_bootstrap_truncation() -> None:
+    """Treat a time limit as bootstrappable and a true terminal as non-bootstrappable."""
+
+    agent = ValueAgent(8, 4, "dqn", TrainingConfig(gamma=0.5))
+    agent.target_network = ConstantNetwork([1.0, 2.0, 7.0, 3.0])
+    batch = make_batch()._replace(
+        rewards=torch.tensor([[1.0], [1.0]]),
+        terminated=torch.tensor([[1.0], [0.0]]),
+        truncated=torch.tensor([[0.0], [1.0]]),
+    )
+    targets = agent._target_values(batch)
+    assert targets.tolist() == [[1.0], [4.5]]
+
+
 def test_linear_epsilon_is_bounded_and_reaches_final_value() -> None:
     """Verify the exploration schedule starts, interpolates, and then clamps."""
 
@@ -77,7 +92,14 @@ def test_replay_buffer_is_seeded_and_returns_expected_shapes() -> None:
     for index in range(6):
         observation = np.full(8, index, dtype=np.float32)
         next_observation = observation + 1
-        transition = (observation, index % 4, float(index), next_observation, bool(index % 2))
+        transition = (
+            observation,
+            index % 4,
+            float(index),
+            next_observation,
+            bool(index % 2),
+            bool((index + 1) % 2),
+        )
         first.add(*transition)
         second.add(*transition)
 
@@ -88,3 +110,5 @@ def test_replay_buffer_is_seeded_and_returns_expected_shapes() -> None:
     assert batch_one.actions.shape == (3, 1)
     assert torch.equal(batch_one.observations, batch_two.observations)
     assert torch.equal(batch_one.actions, batch_two.actions)
+    assert torch.equal(batch_one.terminated, batch_two.terminated)
+    assert torch.equal(batch_one.truncated, batch_two.truncated)

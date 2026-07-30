@@ -134,9 +134,9 @@ def controlled_boundary_cases() -> list[BoundaryCase]:
         ("episode_truncated", 2, 0.02, True, True),
         ("left_leg_absent", 6, 0.0, True, False),
         ("right_leg_absent", 7, 0.0, True, False),
-        ("horizontal_velocity_boundary", 2, 0.10, True, False),
-        ("vertical_velocity_boundary", 3, -0.10, True, False),
-        ("orientation_boundary", 4, 0.10, True, False),
+        ("excess_horizontal_velocity", 2, 0.11, True, False),
+        ("excess_vertical_velocity", 3, -0.11, True, False),
+        ("excess_orientation_angle", 4, 0.11, True, False),
     ]
     for name, index, value, terminated, truncated in mutations:
         observation = safe.copy()
@@ -174,6 +174,7 @@ def run_controlled_boundary_verification() -> pd.DataFrame:
         observation, reward, terminated, truncated, returned_info = wrapped.step(
             case.selected_action
         )
+        counters = wrapped.verification_counters
         expected_penalty = 0.3 if case.selected_action != 0 else 0.0
         expected_reward = base.base_reward - expected_penalty + case.expected_bonus
         rows.append(
@@ -187,11 +188,16 @@ def run_controlled_boundary_verification() -> pd.DataFrame:
                 "observed_reward": float(reward),
                 "expected_reward": expected_reward,
                 "fuel_penalty": expected_penalty,
+                "counter_attempted_actions": counters["attempted_thruster_actions"],
+                "counter_executed_actions": counters["executed_thruster_actions"],
+                "counter_misfires": counters["misfired_thruster_actions"],
                 "info_identity_preserved": returned_info is base.info_object,
                 "passed": bool(
                     base.received_action == case.expected_executed_action
                     and math.isclose(float(reward), expected_reward, abs_tol=1e-7)
                     and returned_info is base.info_object
+                    and counters["applied_fuel_penalties"] == int(case.selected_action != 0)
+                    and counters["safe_landing_bonuses"] == int(case.expected_bonus != 0.0)
                 ),
             }
         )
@@ -283,6 +289,7 @@ def run_random_policy_verification(
                     }
                 )
 
+    internal_counters = environment.verification_counters
     environment.close()
     interval_low, interval_high = _wilson_interval(misfires, attempted_thrusters)
     observed_rate = misfires / attempted_thrusters
@@ -298,13 +305,32 @@ def run_random_policy_verification(
         "misfire_rate_wilson_95_high": interval_high,
         "target_inside_wilson_interval": interval_low <= 0.15 <= interval_high,
         "fuel_penalty_checks": penalty_checks,
+        "fuel_penalty_count": internal_counters["applied_fuel_penalties"],
+        "fuel_penalty_count_matches_attempts": (
+            internal_counters["applied_fuel_penalties"] == attempted_thrusters
+        ),
         "fuel_penalty_mismatches": penalty_mismatches,
+        "internal_attempt_count_matches": (
+            internal_counters["attempted_thruster_actions"] == attempted_thrusters
+        ),
+        "internal_misfire_count_matches": (
+            internal_counters["misfired_thruster_actions"] == misfires
+        ),
+        "executed_thruster_actions": internal_counters["executed_thruster_actions"],
+        "safe_landing_bonus_count": internal_counters["safe_landing_bonuses"],
+        "safe_landing_bonus_count_matches": (
+            internal_counters["safe_landing_bonuses"] == observed_safe_landings
+        ),
         "info_identity_mismatches": info_identity_mismatches,
         "unexpected_action_replacements": unexpected_action_replacements,
         "safe_landings_observed_under_random_policy": observed_safe_landings,
         "passed": bool(
             interval_low <= 0.15 <= interval_high
             and penalty_mismatches == 0
+            and internal_counters["applied_fuel_penalties"] == attempted_thrusters
+            and internal_counters["attempted_thruster_actions"] == attempted_thrusters
+            and internal_counters["misfired_thruster_actions"] == misfires
+            and internal_counters["safe_landing_bonuses"] == observed_safe_landings
             and info_identity_mismatches == 0
             and unexpected_action_replacements == 0
         ),

@@ -15,7 +15,8 @@ class ReplayBatch(NamedTuple):
     actions: torch.Tensor
     rewards: torch.Tensor
     next_observations: torch.Tensor
-    dones: torch.Tensor
+    terminated: torch.Tensor
+    truncated: torch.Tensor
 
 
 class ReplayBuffer:
@@ -34,7 +35,8 @@ class ReplayBuffer:
         self.actions = np.empty(capacity, dtype=np.int64)
         self.rewards = np.empty(capacity, dtype=np.float32)
         self.next_observations = np.empty((capacity, observation_size), dtype=np.float32)
-        self.dones = np.empty(capacity, dtype=np.float32)
+        self.terminated = np.empty(capacity, dtype=np.float32)
+        self.truncated = np.empty(capacity, dtype=np.float32)
         self.position = 0
         self.size = 0
         self.rng = np.random.default_rng(seed)
@@ -45,16 +47,18 @@ class ReplayBuffer:
         action: int,
         reward: float,
         next_observation: np.ndarray,
-        done: bool,
+        terminated: bool,
+        truncated: bool,
     ) -> None:
-        """Insert one transition, overwriting the oldest transition when full."""
+        """Insert one transition with both Gymnasium ending flags preserved."""
 
         index = self.position
         self.observations[index] = observation
         self.actions[index] = action
         self.rewards[index] = reward
         self.next_observations[index] = next_observation
-        self.dones[index] = float(done)
+        self.terminated[index] = float(terminated)
+        self.truncated[index] = float(truncated)
         self.position = (self.position + 1) % self.capacity
         self.size = min(self.size + 1, self.capacity)
 
@@ -69,7 +73,8 @@ class ReplayBuffer:
             torch.as_tensor(self.actions[indices], device=device).unsqueeze(1),
             torch.as_tensor(self.rewards[indices], device=device).unsqueeze(1),
             torch.as_tensor(self.next_observations[indices], device=device),
-            torch.as_tensor(self.dones[indices], device=device).unsqueeze(1),
+            torch.as_tensor(self.terminated[indices], device=device).unsqueeze(1),
+            torch.as_tensor(self.truncated[indices], device=device).unsqueeze(1),
         )
 
     def __len__(self) -> int:

@@ -11,6 +11,8 @@ tmp/
 artifacts/study-smoke/
 artifacts/training-benchmark/
 artifacts/verification-smoke/
+!artifacts/logs/
+!artifacts/logs/*.log
 output/pdf/rendered/
 .DS_Store
 /Assignment 2-v2.docx

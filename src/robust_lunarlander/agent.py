@@ -86,13 +86,21 @@ class ValueAgent:
             )
             return self.target_network(batch.next_observations).gather(1, online_actions)
 
+    def _target_values(self, batch: ReplayBatch) -> torch.Tensor:
+        """Build TD targets, masking terminals but bootstrapping truncations."""
+
+        bootstrap_values = self._bootstrap_values(batch)
+        # A true MDP terminal state has no future return. Time-limit truncation is
+        # stored separately and still bootstraps because the underlying state is
+        # not terminal; the episode ended only because of an external step limit.
+        return batch.rewards + self.config.gamma * (1.0 - batch.terminated) * bootstrap_values
+
     def update(self) -> float:
         """Perform one replay-based temporal-difference optimization step."""
 
         batch = self.replay.sample(self.config.batch_size, self.device)
         predicted_values = self.online_network(batch.observations).gather(1, batch.actions)
-        bootstrap_values = self._bootstrap_values(batch)
-        target_values = batch.rewards + self.config.gamma * (1.0 - batch.dones) * bootstrap_values
+        target_values = self._target_values(batch)
 
         loss = self.loss_function(predicted_values, target_values)
         self.optimizer.zero_grad(set_to_none=True)

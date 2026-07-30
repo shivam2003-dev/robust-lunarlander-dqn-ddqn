@@ -1,0 +1,115 @@
+@page {
+  size: A4 portrait;
+  margin: 13mm 12mm 15mm;
+}
+
+@media screen {
+  body.jp-Notebook {
+    box-sizing: border-box;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 40px;
+  }
+}
+
+@media print {
+  html,
+  body,
+  body.jp-Notebook,
+  main {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.28 !important;
+  }
+
+  .jp-Cell {
+    margin: 0 0 8pt !important;
+    padding: 0 !important;
+    break-inside: auto !important;
+  }
+
+  .jp-MarkdownCell,
+  .jp-Cell-inputWrapper {
+    break-inside: avoid-page;
+  }
+
+  .jp-Collapser,
+  .jp-InputPrompt,
+  .jp-OutputPrompt,
+  .anchor-link {
+    display: none !important;
+  }
+
+  .jp-InputArea,
+  .jp-InputArea-editor,
+  .jp-OutputArea,
+  .jp-OutputArea-child,
+  .jp-OutputArea-output,
+  .jp-RenderedText,
+  .jp-RenderedHTMLCommon {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  pre,
+  code,
+  .jp-InputArea pre,
+  .jp-OutputArea pre,
+  .jp-RenderedText pre {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace !important;
+    font-size: 6.7pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .jp-RenderedHTMLCommon h1,
+  .jp-RenderedHTMLCommon h2,
+  .jp-RenderedHTMLCommon h3 {
+    break-after: avoid-page;
+    color: #1d4ed8 !important;
+  }
+
+  .jp-RenderedHTMLCommon h1 { font-size: 18pt !important; }
+  .jp-RenderedHTMLCommon h2 { font-size: 14pt !important; }
+  .jp-RenderedHTMLCommon h3 { font-size: 11pt !important; }
+
+  .jp-RenderedHTMLCommon table {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 7.2pt !important;
+    page-break-inside: auto;
+  }
+
+  .jp-RenderedHTMLCommon th,
+  .jp-RenderedHTMLCommon td {
+    padding: 2pt 3pt !important;
+    border-bottom: 0.4pt solid #cbd5e1 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .jp-RenderedHTMLCommon thead { display: table-header-group; }
+  .jp-RenderedHTMLCommon tr { break-inside: avoid-page; }
+
+  .jp-RenderedImage img,
+  .jp-OutputArea img,
+  .jp-RenderedHTMLCommon img {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 5pt auto !important;
+  }
+}

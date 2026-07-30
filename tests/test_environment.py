@@ -58,6 +58,13 @@ def test_misfired_thruster_is_still_penalized_and_hidden() -> None:
     assert set(info) == {"source"}
     assert wrapped.action_space is action_space
     assert wrapped.observation_space is observation_space
+    assert wrapped.verification_counters == {
+        "attempted_thruster_actions": 1,
+        "misfired_thruster_actions": 1,
+        "executed_thruster_actions": 0,
+        "applied_fuel_penalties": 1,
+        "safe_landing_bonuses": 0,
+    }
 
 
 def test_successful_thruster_receives_penalty_and_safe_bonus() -> None:
@@ -70,6 +77,9 @@ def test_successful_thruster_receives_penalty_and_safe_bonus() -> None:
 
     assert base.received_action == 3
     assert reward == pytest.approx(56.7)
+    assert wrapped.verification_counters["attempted_thruster_actions"] == 1
+    assert wrapped.verification_counters["executed_thruster_actions"] == 1
+    assert wrapped.verification_counters["safe_landing_bonuses"] == 1
 
 
 def test_do_nothing_draws_no_fuel_penalty() -> None:
@@ -84,6 +94,51 @@ def test_do_nothing_draws_no_fuel_penalty() -> None:
     wrapped.reset(seed=148)
     _, reward, _, _, _ = wrapped.step(0)
     assert reward == pytest.approx(7.0)
+    assert wrapped.verification_counters["applied_fuel_penalties"] == 0
+
+
+def test_safe_terminated_landing_adds_exactly_fifty() -> None:
+    """Add exactly 50 to the base reward when every safe predicate holds."""
+
+    base = ScriptedTerminalEnvironment(safe_observation(), base_reward=7.0)
+    wrapped = StochasticActionFailureWrapper(base)
+    wrapped.reset(seed=148)
+    _, reward, _, _, _ = wrapped.step(0)
+    assert reward == pytest.approx(57.0)
+
+
+@pytest.mark.parametrize(
+    ("index", "value", "terminated", "truncated"),
+    [
+        (2, 0.10, True, False),
+        (3, 0.10, True, False),
+        (4, -0.10, True, False),
+        (6, 0.0, True, False),
+        (7, 0.0, True, False),
+        (2, 0.02, True, True),
+    ],
+)
+def test_unsafe_or_truncated_transition_gets_no_bonus(
+    index: int,
+    value: float,
+    terminated: bool,
+    truncated: bool,
+) -> None:
+    """Reject every requested missing-contact, velocity, angle, and truncation case."""
+
+    observation = safe_observation()
+    observation[index] = value
+    base = ScriptedTerminalEnvironment(
+        observation,
+        base_reward=7.0,
+        terminated=terminated,
+        truncated=truncated,
+    )
+    wrapped = StochasticActionFailureWrapper(base)
+    wrapped.reset(seed=148)
+    _, reward, _, _, _ = wrapped.step(0)
+    assert reward == pytest.approx(7.0)
+    assert wrapped.verification_counters["safe_landing_bonuses"] == 0
 
 
 def test_invalid_action_is_rejected_before_base_step() -> None:

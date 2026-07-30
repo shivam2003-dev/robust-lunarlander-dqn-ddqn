@@ -1,25 +1,31 @@
 {
   "group_number": 148,
-  "status": "FINAL",
+  "status": "PENDING_GROUP_CONFIRMATION",
+  "contributions_confirmed_by_group": false,
   "members": [
     {
       "name": "Shivam Kumar",
+      "student_id": "2025AA05312",
       "contribution_percent": 20
     },
     {
       "name": "Nunna Swahan Bapaji",
+      "student_id": "2025AA05569",
       "contribution_percent": 20
     },
     {
       "name": "Garimella Nikhitha",
+      "student_id": "2025AA05512",
       "contribution_percent": 20
     },
     {
       "name": "S H Aishwarya",
+      "student_id": "2025AA05594",
       "contribution_percent": 20
     },
     {
       "name": "Omkareshwar Vaijanath Telee",
+      "student_id": "2025AB05010",
       "contribution_percent": 20
     }
   ]

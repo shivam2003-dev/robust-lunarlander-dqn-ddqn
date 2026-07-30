@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPORT_SOURCE="output/report/Group_148_Q_learning_DQN_DDQN.md"
-REPORT_OUTPUT="output/pdf/Group_148_Q_learning_DQN_DDQN.pdf"
+REPORT_OUTPUT="output/pdf/Group148_Q_learning_DQN_DDQN.pdf"
 
 mkdir -p output/pdf
 

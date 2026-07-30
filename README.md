@@ -14,13 +14,14 @@ next-state target calculation.
 |---|---:|---:|---:|---:|
 | DQN | Original | 67.15 | 24% | 138.07 |
 | DDQN | Original | 169.05 | 61% | 250.72 |
-| DQN | Modified | -217.58 | 3% | 710.45 |
-| DDQN | Modified | 87.73 | 32% | 166.23 |
+| DQN | Modified | 48.02 | 44% | 423.85 |
+| DDQN | Modified | -225.82 | 3% | 730.92 |
 
 The mean absolute DQN-DDQN validation Q-gap over the final 100 training
-episodes is 16.23 in the original environment and 58.30 in the modified
-environment. Under stochastic action failure, DDQN is substantially more
-robust in this seeded experiment.
+episodes is 16.23 in the original environment and 28.68 in the modified
+environment. DDQN is slightly better in the final modified training window,
+while DQN is much better in greedy evaluation. This metric-dependent,
+single-seed outcome is not evidence of statistical significance.
 
 ![Four required assignment metrics](artifacts/plots/four_metric_overview.png)
 
@@ -32,12 +33,13 @@ robust in this seeded experiment.
   the agent-facing info dictionary.
 - Shared modular implementations of Q-network, replay buffer, epsilon-greedy
   policy, target network, DQN targets, and DDQN targets.
-- Per-episode logs for all 3,200 training episodes and 400 greedy evaluation
-  episodes.
+- Per-episode CSVs and compact progress logs for all 3,200 training episodes,
+  including attempted and actually executed thruster counts, plus 400 greedy
+  evaluation episodes.
 - Four required plots in PNG and editable SVG form.
 - Executable notebook and one PDF submission with explanations, source
-  listings, outputs, and first-five/last-five episode excerpts. Complete
-  episode ledgers remain in the repository CSV files.
+  listings, plots, and all 3,200 compact per-iteration training records in
+  Appendix B (800 rows for each controlled experiment).
 - Automated tests, style checks, provenance hashes, and a virtual-lab runbook.
 
 ## Reproduce
@@ -49,11 +51,24 @@ Gymnasium 1.2.3, PyTorch 2.13.0, NumPy 2.4.4, and pandas 3.0.2.
     source .venv/bin/activate
     pytest
     python -m robust_lunarlander.verification --episodes 250
-    python -m robust_lunarlander.experiment --episodes 800 --evaluation-episodes 100
+    python -m robust_lunarlander.experiment --episodes 800 --evaluation-episodes 100 --force
     python scripts/build_notebook.py
-    jupyter nbconvert --execute --to notebook --inplace output/jupyter-notebook/Group_148_Q_learning_DQN_DDQN.ipynb
+    uv run jupyter nbconvert --execute --to notebook --inplace output/jupyter-notebook/Group_148_Q_learning_DQN_DDQN.ipynb
     python scripts/build_report.py
     bash scripts/render_report.sh
+
+The final report is written to
+`output/pdf/Group148_Q_learning_DQN_DDQN.pdf`. Confirm the exact filename
+against the latest instructor guidance.
+
+A print-ready HTML copy is written to
+`output/html/Group148_Q_learning_DQN_DDQN.html`. Open it in Chrome and choose
+**Print -> Save as PDF**, with paper size A4, portrait orientation, and browser
+headers/footers disabled.
+
+The complete executed notebook (Markdown, code cells, and stored outputs) is
+also rendered as `output/html/Group_148_Q_learning_DQN_DDQN.html`. Regenerate
+it with `make notebook-html`.
 
 The complete study is deterministic for the recorded software/hardware stack,
 although exact deep-learning floating-point trajectories can vary across

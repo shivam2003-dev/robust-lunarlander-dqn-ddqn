@@ -1,5 +1,5 @@
-experiment,algorithm,environment,mean_reward,reward_std,safe_landing_rate,mean_thruster_activations,mean_episode_steps
-ddqn_modified,DDQN,Modified,87.73154415695979,135.6574231394492,0.32,166.23,255.73
-ddqn_original,DDQN,Original,169.04539011638164,136.74862637045157,0.61,250.72,360.51
-dqn_modified,DQN,Modified,-217.5758781494884,94.01989160085137,0.03,710.45,959.37
-dqn_original,DQN,Original,67.15368142647668,95.70975419746809,0.24,138.07,188.34
+experiment,algorithm,environment_type,mean_reward,reward_std,safe_landing_rate,mean_attempted_thruster_activations,mean_executed_thruster_activations,mean_episode_steps
+ddqn_modified,DDQN,Modified,-225.8189272617814,102.17360091049939,0.03,730.92,622.07,972.34
+ddqn_original,DDQN,Original,169.04539011638164,136.74862637045157,0.61,250.72,250.72,360.51
+dqn_modified,DQN,Modified,48.02278714555646,186.7275368765883,0.44,423.85,359.97,615.37
+dqn_original,DQN,Original,67.15368142647668,95.70975419746809,0.24,138.07,138.07,188.34

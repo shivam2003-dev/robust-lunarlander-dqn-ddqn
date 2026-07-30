@@ -301,11 +301,13 @@ The plots tell a coherent but not simplistic story:
 
 ![Four training metrics](../artifacts/plots/four_metric_overview.png)
 
-- DDQN performs better than DQN in greedy evaluation under hidden failures.
-- The DQN-DDQN Q-value gap is much larger in the modified environment.
+- DDQN is slightly better in the final modified training window, but DQN is
+  much better in greedy evaluation; one seed does not give a universal winner.
+- The DQN-DDQN Q-value gap is larger in the modified environment.
 - Hidden failures reduce strict landing reliability.
-- The fuel penalty can encourage efficient control in a successfully learned
-  policy, but it cannot rescue a policy whose learning collapses.
+- The attempted-action fuel penalty does not guarantee conservative control;
+  both modified greedy policies use more attempts than their original
+  counterparts in this run.
 
 The last point matters. Reward design creates incentives; it does not guarantee
 that a finite neural-network training run discovers the desired behavior.

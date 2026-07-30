@@ -21,16 +21,38 @@ project with pip:
     python -m pip install --upgrade pip
     python -m pip install -e ".[dev]"
 
+For a Debian/Ubuntu lab, Box2D may also require:
+
+    sudo apt-get update
+    sudo apt-get install -y swig build-essential python3-dev
+
+If `sudo` is unavailable, ask the lab administrator for these packages. Keep
+the environment ID fixed at `LunarLander-v3`.
+
 ## 2. Run the authoritative checks
+
+Before execution, show the lab identity and timestamp and save:
+
+    submission/virtual_lab/01_start_timestamp.png
 
     make test
     make verify
 
 For a full retraining run:
 
-    make study
+    make study | tee submission/virtual_lab/full_training_console.log
 
-For a faster integrity check of the committed experiment artifacts, run:
+`make study` uses `--force`; it does not silently reuse committed development
+artifacts. For a quick separate smoke run:
+
+    make smoke
+
+After the full run, rebuild and execute the notebook and report:
+
+    make notebook
+    make report
+
+For an integrity check of the resulting artifacts:
 
     python scripts/audit_artifacts.py
 
@@ -56,19 +78,27 @@ The screenshot must visibly include:
 
 ## 4. Save genuine evidence
 
-Save the screenshot as:
+Save five genuine screenshots:
 
-    submission/virtual_lab/virtual_lab_timestamp.png
+    submission/virtual_lab/01_start_timestamp.png
+    submission/virtual_lab/02_environment_versions.png
+    submission/virtual_lab/03_training_progress.png
+    submission/virtual_lab/04_final_outputs_plots.png
+    submission/virtual_lab/05_saved_artifacts.png
 
 Do not crop away the lab identity, timestamp, command, or pass result. Rebuild
-the notebook and PDF only after the genuine screenshot exists:
+the notebook and PDF after the genuine screenshots exist:
 
     make notebook
     make report
 
 ## 5. Final upload checks
 
-- Verify the contribution declaration contains every member and totals 100%.
-- Confirm the screenshot is readable at 100% zoom in the PDF.
+- Verify all names/IDs and ask all members to confirm the declared percentages.
+- Only then set `contributions_confirmed_by_group` to `true` in
+  `submission/group_details.json` and rebuild.
+- Confirm all five screenshots are readable at 100% zoom in the PDF.
 - Open the PDF from output/pdf and inspect every page.
-- Upload only Group_148_Q_learning_DQN_DDQN.pdf.
+- Run `python scripts/audit_artifacts.py --require-submission-evidence`.
+- Upload only `Group148_Q_learning_DQN_DDQN.pdf`, after checking the latest
+  instructor filename guidance.

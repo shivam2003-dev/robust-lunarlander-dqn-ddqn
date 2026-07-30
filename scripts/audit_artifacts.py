@@ -12,6 +12,23 @@ import numpy as np
 import pandas as pd
 
 EXPERIMENTS = ("dqn_original", "ddqn_original", "dqn_modified", "ddqn_modified")
+REQUIRED_METRIC_COLUMNS = {
+    "episode",
+    "episode_reward",
+    "average_predicted_q",
+    "successful_safe_landing",
+    "moving_safe_landing_rate_100",
+    "attempted_thruster_activations",
+    "executed_thruster_activations",
+    "average_attempted_thruster_activations_per_episode",
+    "episode_steps",
+    "epsilon",
+    "training_loss",
+    "environment_type",
+    "algorithm",
+    "random_seed",
+    "episode_seconds",
+}
 
 
 def record(checks: list[dict[str, Any]], name: str, passed: bool, detail: str) -> None:
@@ -57,8 +74,26 @@ def run_audit(repo: Path, *, require_submission_evidence: bool) -> list[dict[str
         record(
             checks,
             f"{name} episode ledger",
-            len(frame) == episodes and frame["episode"].tolist() == expected_episodes,
-            f"rows={len(frame)}, range={frame['episode'].min()}-{frame['episode'].max()}",
+            len(frame) == episodes
+            and frame["episode"].tolist() == expected_episodes
+            and REQUIRED_METRIC_COLUMNS.issubset(frame.columns),
+            (
+                f"rows={len(frame)}, range={frame['episode'].min()}-"
+                f"{frame['episode'].max()}, schema="
+                f"{REQUIRED_METRIC_COLUMNS.issubset(frame.columns)}"
+            ),
+        )
+        log_path = artifacts / "logs" / f"{name}.log"
+        log_records = (
+            max(len(log_path.read_text(encoding="utf-8").splitlines()) - 1, 0)
+            if log_path.exists()
+            else 0
+        )
+        record(
+            checks,
+            f"{name} per-episode progress log",
+            log_records == episodes,
+            f"records={log_records}",
         )
         record(
             checks,
@@ -82,6 +117,7 @@ def run_audit(repo: Path, *, require_submission_evidence: bool) -> list[dict[str
         "success_rate_100",
         "thruster_activations",
         "four_metric_overview",
+        "epsilon_schedule",
     )
     for stem in required_plots:
         png = artifacts / "plots" / f"{stem}.png"
@@ -112,8 +148,34 @@ def run_audit(repo: Path, *, require_submission_evidence: bool) -> list[dict[str
     record(
         checks,
         "attempted-action fuel penalty",
-        random_policy["fuel_penalty_mismatches"] == 0,
-        f"mismatches={random_policy['fuel_penalty_mismatches']}",
+        random_policy["fuel_penalty_mismatches"] == 0
+        and random_policy["fuel_penalty_count"] == random_policy["attempted_thruster_actions"],
+        (
+            f"mismatches={random_policy['fuel_penalty_mismatches']}, "
+            f"count={random_policy['fuel_penalty_count']}, "
+            f"attempts={random_policy['attempted_thruster_actions']}"
+        ),
+    )
+
+    final_comparison_path = artifacts / "final_comparison.csv"
+    final_comparison = pd.read_csv(final_comparison_path)
+    required_final_columns = {
+        "mean_reward_final_100",
+        "reward_std_final_100",
+        "best_moving_average_reward_100",
+        "final_fixed_set_average_q",
+        "safe_landing_rate_final_100",
+        "mean_attempted_thrusters_final_100",
+        "mean_executed_thrusters_final_100",
+        "successful_safe_landings_total",
+        "training_duration_seconds",
+    }
+    final_schema_ready = required_final_columns.issubset(final_comparison.columns)
+    record(
+        checks,
+        "final comparison table",
+        len(final_comparison) == 4 and final_schema_ready,
+        f"rows={len(final_comparison)}, schema={final_schema_ready}",
     )
 
     group_details = json.loads(
@@ -123,25 +185,56 @@ def run_audit(repo: Path, *, require_submission_evidence: bool) -> list[dict[str
         float(member["contribution_percent"]) for member in group_details["members"]
     )
     names_complete = all("REPLACE_" not in member["name"] for member in group_details["members"])
+    ids_complete = all(
+        bool(member.get("student_id")) and "REPLACE_" not in member["student_id"]
+        for member in group_details["members"]
+    )
     group_ready = (
-        group_details["status"] == "FINAL"
+        group_details.get("contributions_confirmed_by_group") is True
         and names_complete
+        and ids_complete
         and abs(contribution_total - 100.0) < 1e-9
     )
     record(
         checks,
         "group contribution declaration",
         group_ready if require_submission_evidence else True,
-        f"status={group_details['status']}, total={contribution_total:g}%",
+        (
+            f"status={group_details['status']}, ids_complete={ids_complete}, "
+            f"confirmed={group_details.get('contributions_confirmed_by_group')}, "
+            f"total={contribution_total:g}%"
+        ),
     )
 
-    screenshot = repo / "submission" / "virtual_lab" / "virtual_lab_timestamp.png"
-    screenshot_ready = screenshot.exists() and screenshot.stat().st_size > 0
+    screenshot_names = (
+        "01_start_timestamp.png",
+        "02_environment_versions.png",
+        "03_training_progress.png",
+        "04_final_outputs_plots.png",
+        "05_saved_artifacts.png",
+    )
+    missing_screenshots = [
+        name
+        for name in screenshot_names
+        if not (repo / "submission" / "virtual_lab" / name).exists()
+        or (repo / "submission" / "virtual_lab" / name).stat().st_size == 0
+    ]
+    screenshot_ready = not missing_screenshots
     record(
         checks,
-        "virtual-lab timestamp screenshot",
+        "virtual-lab screenshot set",
         screenshot_ready if require_submission_evidence else True,
-        "present" if screenshot_ready else "pending genuine virtual-lab capture",
+        "all five present" if screenshot_ready else f"missing={missing_screenshots}",
+    )
+
+    final_pdf = repo / "output" / "pdf" / "Group148_Q_learning_DQN_DDQN.pdf"
+    record(
+        checks,
+        "exact final PDF filename",
+        (final_pdf.exists() and final_pdf.stat().st_size > 0)
+        if require_submission_evidence
+        else True,
+        (f"{final_pdf.relative_to(repo)} ({'present' if final_pdf.exists() else 'not built yet'})"),
     )
     return checks
 

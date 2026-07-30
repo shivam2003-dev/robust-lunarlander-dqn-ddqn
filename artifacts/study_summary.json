@@ -2,80 +2,166 @@
   "final_100_training_episodes": {
     "dqn_original": {
       "mean_training_reward_last_100": 150.51753050033187,
+      "reward_std_last_100": 113.67488021821586,
+      "best_100_episode_moving_average_reward": 154.39739816143637,
+      "final_fixed_set_average_q": 49.11587142944336,
       "safe_landing_rate_last_100": 0.36,
       "mean_predicted_q_last_100": 68.0648503112793,
-      "mean_thruster_activations_last_100": 409.8
+      "mean_attempted_thruster_activations_last_100": 409.8,
+      "mean_executed_thruster_activations_last_100": 409.8,
+      "successful_safe_landings_total": 116,
+      "training_duration_seconds": 166.63041529708426
     },
     "ddqn_original": {
       "mean_training_reward_last_100": 218.2367811030669,
+      "reward_std_last_100": 98.01450098772142,
+      "best_100_episode_moving_average_reward": 226.33654175369998,
+      "final_fixed_set_average_q": 80.51420593261719,
       "safe_landing_rate_last_100": 0.71,
       "mean_predicted_q_last_100": 76.49958786010743,
-      "mean_thruster_activations_last_100": 304.11
+      "mean_attempted_thruster_activations_last_100": 304.11,
+      "mean_executed_thruster_activations_last_100": 304.11,
+      "successful_safe_landings_total": 166,
+      "training_duration_seconds": 137.971259694139
     },
     "dqn_modified": {
-      "mean_training_reward_last_100": -224.912684170433,
-      "safe_landing_rate_last_100": 0.03,
-      "mean_predicted_q_last_100": -42.59241945266724,
-      "mean_thruster_activations_last_100": 656.63
+      "mean_training_reward_last_100": -172.73336468395456,
+      "reward_std_last_100": 192.6720783644035,
+      "best_100_episode_moving_average_reward": -56.870612987812144,
+      "final_fixed_set_average_q": 48.56492233276367,
+      "safe_landing_rate_last_100": 0.19,
+      "mean_predicted_q_last_100": 17.243666691780092,
+      "mean_attempted_thruster_activations_last_100": 655.06,
+      "mean_executed_thruster_activations_last_100": 557.94,
+      "successful_safe_landings_total": 86,
+      "training_duration_seconds": 89.0905181315029
     },
     "ddqn_modified": {
-      "mean_training_reward_last_100": -119.17338584597829,
-      "safe_landing_rate_last_100": 0.18,
-      "mean_predicted_q_last_100": 15.710496079623699,
-      "mean_thruster_activations_last_100": 531.96
+      "mean_training_reward_last_100": -150.41910507985494,
+      "reward_std_last_100": 200.68889602238826,
+      "best_100_episode_moving_average_reward": -54.053481348394435,
+      "final_fixed_set_average_q": -6.724809646606445,
+      "safe_landing_rate_last_100": 0.25,
+      "mean_predicted_q_last_100": -11.438173785209656,
+      "mean_attempted_thruster_activations_last_100": 595.74,
+      "mean_executed_thruster_activations_last_100": 507.37,
+      "successful_safe_landings_total": 83,
+      "training_duration_seconds": 98.71668857062468
     }
   },
   "q_value_gap": {
     "original_environment_mean_absolute_gap": 16.22627914428711,
-    "modified_environment_mean_absolute_gap": 58.30291553229094,
-    "modified_minus_original": 42.076636388003834,
+    "modified_environment_mean_absolute_gap": 28.681840476989745,
+    "modified_minus_original": 12.455561332702636,
     "failure_increased_gap": true
   },
   "attempted_thruster_change_modified_minus_original": {
-    "DQN": 246.82999999999998,
-    "DDQN": 227.85000000000002
+    "DQN": 245.25999999999993,
+    "DDQN": 291.63
   },
-  "greedy_evaluation": [
+  "final_comparison": [
     {
-      "experiment": "ddqn_modified",
-      "algorithm": "DDQN",
-      "environment": "Modified",
-      "mean_reward": 87.73154415695979,
-      "reward_std": 135.6574231394492,
-      "safe_landing_rate": 0.32,
-      "mean_thruster_activations": 166.23,
-      "mean_episode_steps": 255.73
+      "experiment": "dqn_original",
+      "algorithm": "DQN",
+      "environment": "Original",
+      "mean_reward_final_100": 150.51753050033187,
+      "reward_std_final_100": 113.67488021821586,
+      "best_moving_average_reward_100": 154.39739816143637,
+      "final_fixed_set_average_q": 49.11587142944336,
+      "safe_landing_rate_final_100": 0.36,
+      "mean_attempted_thrusters_final_100": 409.8,
+      "mean_executed_thrusters_final_100": 409.8,
+      "successful_safe_landings_total": 116,
+      "training_duration_seconds": 166.63041529708426
     },
     {
       "experiment": "ddqn_original",
       "algorithm": "DDQN",
       "environment": "Original",
-      "mean_reward": 169.04539011638164,
-      "reward_std": 136.74862637045157,
-      "safe_landing_rate": 0.61,
-      "mean_thruster_activations": 250.72,
-      "mean_episode_steps": 360.51
+      "mean_reward_final_100": 218.2367811030669,
+      "reward_std_final_100": 98.01450098772142,
+      "best_moving_average_reward_100": 226.33654175369998,
+      "final_fixed_set_average_q": 80.51420593261719,
+      "safe_landing_rate_final_100": 0.71,
+      "mean_attempted_thrusters_final_100": 304.11,
+      "mean_executed_thrusters_final_100": 304.11,
+      "successful_safe_landings_total": 166,
+      "training_duration_seconds": 137.971259694139
     },
     {
       "experiment": "dqn_modified",
       "algorithm": "DQN",
       "environment": "Modified",
-      "mean_reward": -217.5758781494884,
-      "reward_std": 94.01989160085137,
+      "mean_reward_final_100": -172.73336468395456,
+      "reward_std_final_100": 192.6720783644035,
+      "best_moving_average_reward_100": -56.870612987812144,
+      "final_fixed_set_average_q": 48.56492233276367,
+      "safe_landing_rate_final_100": 0.19,
+      "mean_attempted_thrusters_final_100": 655.06,
+      "mean_executed_thrusters_final_100": 557.94,
+      "successful_safe_landings_total": 86,
+      "training_duration_seconds": 89.0905181315029
+    },
+    {
+      "experiment": "ddqn_modified",
+      "algorithm": "DDQN",
+      "environment": "Modified",
+      "mean_reward_final_100": -150.41910507985494,
+      "reward_std_final_100": 200.68889602238826,
+      "best_moving_average_reward_100": -54.053481348394435,
+      "final_fixed_set_average_q": -6.724809646606445,
+      "safe_landing_rate_final_100": 0.25,
+      "mean_attempted_thrusters_final_100": 595.74,
+      "mean_executed_thrusters_final_100": 507.37,
+      "successful_safe_landings_total": 83,
+      "training_duration_seconds": 98.71668857062468
+    }
+  ],
+  "greedy_evaluation": [
+    {
+      "experiment": "ddqn_modified",
+      "algorithm": "DDQN",
+      "environment_type": "Modified",
+      "mean_reward": -225.8189272617814,
+      "reward_std": 102.17360091049939,
       "safe_landing_rate": 0.03,
-      "mean_thruster_activations": 710.45,
-      "mean_episode_steps": 959.37
+      "mean_attempted_thruster_activations": 730.92,
+      "mean_executed_thruster_activations": 622.07,
+      "mean_episode_steps": 972.34
+    },
+    {
+      "experiment": "ddqn_original",
+      "algorithm": "DDQN",
+      "environment_type": "Original",
+      "mean_reward": 169.04539011638164,
+      "reward_std": 136.74862637045157,
+      "safe_landing_rate": 0.61,
+      "mean_attempted_thruster_activations": 250.72,
+      "mean_executed_thruster_activations": 250.72,
+      "mean_episode_steps": 360.51
+    },
+    {
+      "experiment": "dqn_modified",
+      "algorithm": "DQN",
+      "environment_type": "Modified",
+      "mean_reward": 48.02278714555646,
+      "reward_std": 186.7275368765883,
+      "safe_landing_rate": 0.44,
+      "mean_attempted_thruster_activations": 423.85,
+      "mean_executed_thruster_activations": 359.97,
+      "mean_episode_steps": 615.37
     },
     {
       "experiment": "dqn_original",
       "algorithm": "DQN",
-      "environment": "Original",
+      "environment_type": "Original",
       "mean_reward": 67.15368142647668,
       "reward_std": 95.70975419746809,
       "safe_landing_rate": 0.24,
-      "mean_thruster_activations": 138.07,
+      "mean_attempted_thruster_activations": 138.07,
+      "mean_executed_thruster_activations": 138.07,
       "mean_episode_steps": 188.34
     }
   ],
-  "best_algorithm_under_modified_environment": "DDQN"
+  "best_algorithm_under_modified_environment": "DQN"
 }

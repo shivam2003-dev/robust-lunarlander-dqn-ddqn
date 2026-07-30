@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 DISPLAY_ORDER = [
     "dqn_original",
@@ -40,6 +41,7 @@ LINESTYLES = {
 def _configure_style() -> None:
     """Apply one accessible visual system to all report figures."""
 
+    sns.set_theme(style="whitegrid", context="notebook")
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
@@ -110,6 +112,7 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
     specifications = [
         (
             "episode_reward",
+            "episode_reward",
             "Episode reward vs. training episode",
             "Episode reward",
             50,
@@ -118,6 +121,7 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
         ),
         (
             "average_predicted_q",
+            "average_predicted_q",
             "Average predicted Q-value on fixed validation states",
             "Mean max predicted Q-value",
             20,
@@ -125,6 +129,7 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
             "The same 512 validation states are used at every episode for all four agents.",
         ),
         (
+            "moving_safe_landing_rate_100",
             "success_rate_100",
             "Safe-landing rate vs. training episode",
             "Safe-landing rate (previous 100 episodes)",
@@ -133,8 +138,9 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
             "Success uses the assignment's terminal leg-contact, velocity, and angle criterion.",
         ),
         (
+            "attempted_thruster_activations",
             "thruster_activations",
-            "Attempted thruster activations vs. training episode",
+            "Average attempted thruster activations per episode",
             "Attempted thruster actions per episode",
             20,
             0.08,
@@ -142,7 +148,7 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
         ),
     ]
 
-    for column, title, ylabel, window, raw_alpha, caption in specifications:
+    for column, stem, title, ylabel, window, raw_alpha, caption in specifications:
         figure, axis = plt.subplots(figsize=(11.2, 6.2))
         _plot_series(
             axis,
@@ -157,10 +163,10 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
         axis.legend(ncol=2, loc="best")
         figure.text(0.125, 0.015, caption, color="#475569", fontsize=9)
         figure.subplots_adjust(bottom=0.14)
-        _save_figure(figure, output_dir, column)
+        _save_figure(figure, output_dir, stem)
 
     overview, axes = plt.subplots(2, 2, figsize=(15.2, 10.0))
-    for axis, (column, title, ylabel, window, raw_alpha, _) in zip(
+    for axis, (column, _, title, ylabel, window, raw_alpha, _) in zip(
         axes.flat,
         specifications,
         strict=True,
@@ -202,6 +208,30 @@ def create_all_plots(metrics: dict[str, pd.DataFrame], output_dir: Path) -> None
     )
     _save_figure(overview, output_dir, "four_metric_overview")
 
+    epsilon_figure, epsilon_axis = plt.subplots(figsize=(10.0, 4.8))
+    reference = metrics[DISPLAY_ORDER[0]]
+    epsilon_axis.plot(
+        reference["global_step"],
+        reference["epsilon"],
+        color="#6D28D9",
+        linewidth=2.0,
+        label="Shared linear epsilon schedule",
+    )
+    epsilon_axis.set_title("Epsilon-greedy exploration schedule", loc="left", fontweight="bold")
+    epsilon_axis.set_xlabel("Environment step")
+    epsilon_axis.set_ylabel("Epsilon")
+    epsilon_axis.legend(loc="best")
+    epsilon_axis.set_ylim(0.0, 1.05)
+    epsilon_figure.text(
+        0.125,
+        0.015,
+        "The same start, end, and step-based decay are applied to all four agents.",
+        color="#475569",
+        fontsize=9,
+    )
+    epsilon_figure.subplots_adjust(bottom=0.18)
+    _save_figure(epsilon_figure, output_dir, "epsilon_schedule")
+
 
 def summarize_experiments(
     metrics: dict[str, pd.DataFrame],
@@ -210,14 +240,55 @@ def summarize_experiments(
     """Compute report-ready comparisons without inventing unsupported conclusions."""
 
     final_window: dict[str, dict[str, float]] = {}
+    final_comparison: list[dict[str, Any]] = []
     for name in DISPLAY_ORDER:
         tail = metrics[name].tail(100)
+        moving_window = min(100, len(metrics[name]))
         final_window[name] = {
             "mean_training_reward_last_100": float(tail["episode_reward"].mean()),
-            "safe_landing_rate_last_100": float(tail["successful_landing"].mean()),
+            "reward_std_last_100": float(tail["episode_reward"].std()),
+            "best_100_episode_moving_average_reward": float(
+                metrics[name]["episode_reward"]
+                .rolling(moving_window, min_periods=moving_window)
+                .mean()
+                .max()
+            ),
+            "final_fixed_set_average_q": float(metrics[name]["average_predicted_q"].iloc[-1]),
+            "safe_landing_rate_last_100": float(tail["successful_safe_landing"].mean()),
             "mean_predicted_q_last_100": float(tail["average_predicted_q"].mean()),
-            "mean_thruster_activations_last_100": float(tail["thruster_activations"].mean()),
+            "mean_attempted_thruster_activations_last_100": float(
+                tail["attempted_thruster_activations"].mean()
+            ),
+            "mean_executed_thruster_activations_last_100": float(
+                tail["executed_thruster_activations"].mean()
+            ),
+            "successful_safe_landings_total": int(metrics[name]["successful_safe_landing"].sum()),
+            "training_duration_seconds": float(metrics[name]["episode_seconds"].sum()),
         }
+        final_comparison.append(
+            {
+                "experiment": name,
+                "algorithm": str(metrics[name]["algorithm"].iloc[0]),
+                "environment": str(metrics[name]["environment_type"].iloc[0]),
+                "mean_reward_final_100": final_window[name]["mean_training_reward_last_100"],
+                "reward_std_final_100": final_window[name]["reward_std_last_100"],
+                "best_moving_average_reward_100": final_window[name][
+                    "best_100_episode_moving_average_reward"
+                ],
+                "final_fixed_set_average_q": final_window[name]["final_fixed_set_average_q"],
+                "safe_landing_rate_final_100": final_window[name]["safe_landing_rate_last_100"],
+                "mean_attempted_thrusters_final_100": final_window[name][
+                    "mean_attempted_thruster_activations_last_100"
+                ],
+                "mean_executed_thrusters_final_100": final_window[name][
+                    "mean_executed_thruster_activations_last_100"
+                ],
+                "successful_safe_landings_total": final_window[name][
+                    "successful_safe_landings_total"
+                ],
+                "training_duration_seconds": final_window[name]["training_duration_seconds"],
+            }
+        )
 
     original_gap = float(
         (
@@ -237,7 +308,7 @@ def summarize_experiments(
     )
     evaluation_records = evaluation_summary.to_dict(orient="records")
     modified_evaluation = evaluation_summary[
-        evaluation_summary["environment"] == "Modified"
+        evaluation_summary["environment_type"] == "Modified"
     ].sort_values(["safe_landing_rate", "mean_reward"], ascending=False)
     best_modified = str(modified_evaluation.iloc[0]["algorithm"])
 
@@ -250,11 +321,12 @@ def summarize_experiments(
             "failure_increased_gap": modified_gap > original_gap,
         },
         "attempted_thruster_change_modified_minus_original": {
-            "DQN": final_window["dqn_modified"]["mean_thruster_activations_last_100"]
-            - final_window["dqn_original"]["mean_thruster_activations_last_100"],
-            "DDQN": final_window["ddqn_modified"]["mean_thruster_activations_last_100"]
-            - final_window["ddqn_original"]["mean_thruster_activations_last_100"],
+            "DQN": final_window["dqn_modified"]["mean_attempted_thruster_activations_last_100"]
+            - final_window["dqn_original"]["mean_attempted_thruster_activations_last_100"],
+            "DDQN": final_window["ddqn_modified"]["mean_attempted_thruster_activations_last_100"]
+            - final_window["ddqn_original"]["mean_attempted_thruster_activations_last_100"],
         },
+        "final_comparison": final_comparison,
         "greedy_evaluation": evaluation_records,
         "best_algorithm_under_modified_environment": best_modified,
     }
