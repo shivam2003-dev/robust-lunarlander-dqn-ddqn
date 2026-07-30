@@ -429,7 +429,17 @@ never substituted with fabricated screenshots.
 
 ## 8.4 Timestamped saved-file and checkpoint evidence
 
-\begin{center}\fbox{\parbox{0.88\linewidth}{\centering\textbf{[INSERT VIRTUAL-LAB SCREENSHOT WITH VISIBLE TIMESTAMP HERE]}\\[0.4em]Timestamped saved CSV, validation-state, plot, and checkpoint evidence. Expected file: \texttt{submission/virtual\_lab/05\_saved\_artifacts.png}.}}\end{center}
+The saved study artifacts are included with this submission and are
+listed below. The final-output screenshot above provides the timestamped virtual-lab
+completion evidence; this inventory avoids inserting a non-genuine replacement image.
+
+| Artifact class | Saved location |
+|---|---|
+| Per-episode ledgers and progress logs | `artifacts/metrics/`, `artifacts/logs/` |
+| Model checkpoints | `artifacts/checkpoints/` |
+| Fixed validation states | `artifacts/validation_states.npy` |
+| Evaluation data and summary | `artifacts/evaluation_episodes.csv`, `artifacts/evaluation_summary.csv` |
+| Plots and final comparison | `artifacts/plots/`, `artifacts/final_comparison.csv` |
 
 # 9. Conclusion
 

@@ -1064,7 +1064,46 @@ plots</figcaption>
 </figure>
 <h2 id="timestamped-saved-file-and-checkpoint-evidence">8.4 Timestamped
 saved-file and checkpoint evidence</h2>
-
+<p>The saved study artifacts are included with this submission and are
+listed below. The final-output screenshot above provides the timestamped
+virtual-lab completion evidence; this inventory avoids inserting a
+non-genuine replacement image.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Artifact class</th>
+<th>Saved location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-episode ledgers and progress logs</td>
+<td><code>artifacts/metrics/</code>, <code>artifacts/logs/</code></td>
+</tr>
+<tr>
+<td>Model checkpoints</td>
+<td><code>artifacts/checkpoints/</code></td>
+</tr>
+<tr>
+<td>Fixed validation states</td>
+<td><code>artifacts/validation_states.npy</code></td>
+</tr>
+<tr>
+<td>Evaluation data and summary</td>
+<td><code>artifacts/evaluation_episodes.csv</code>,
+<code>artifacts/evaluation_summary.csv</code></td>
+</tr>
+<tr>
+<td>Plots and final comparison</td>
+<td><code>artifacts/plots/</code>,
+<code>artifacts/final_comparison.csv</code></td>
+</tr>
+</tbody>
+</table>
 <h1 id="conclusion">9. Conclusion</h1>
 <p>In the recorded single-seed experiment, hidden actuator failure
 increased the DQN-DDQN fixed-state Q-value gap from 16.23 to 28.68. The

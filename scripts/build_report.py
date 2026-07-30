@@ -419,11 +419,17 @@ def main() -> None:
         "04_final_outputs_plots.png",
         "Timestamped final outputs and required plots",
     )
-    saved_files_screenshot = screenshot_block(
-        repo,
-        "05_saved_artifacts.png",
-        "Timestamped saved CSV, validation-state, plot, and checkpoint evidence",
-    )
+    saved_files_screenshot = """The saved study artifacts are included with this submission and are
+listed below. The final-output screenshot above provides the timestamped virtual-lab
+completion evidence; this inventory avoids inserting a non-genuine replacement image.
+
+| Artifact class | Saved location |
+|---|---|
+| Per-episode ledgers and progress logs | `artifacts/metrics/`, `artifacts/logs/` |
+| Model checkpoints | `artifacts/checkpoints/` |
+| Fixed validation states | `artifacts/validation_states.npy` |
+| Evaluation data and summary | `artifacts/evaluation_episodes.csv`, `artifacts/evaluation_summary.csv` |
+| Plots and final comparison | `artifacts/plots/`, `artifacts/final_comparison.csv` |"""
 
     report = rf"""---
 title: "Robust Reinforcement Learning under Stochastic Action Failure"
