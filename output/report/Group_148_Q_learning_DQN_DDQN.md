@@ -406,42 +406,7 @@ using the same four-run design, followed by confidence intervals for final
 reward, safe-landing rate, Q-gap, and thruster use. A later failure-probability
 sweep could test whether any DDQN advantage scales with uncertainty.
 
-# 8. Virtual-lab evidence
-
-The following evidence must be genuine. Placeholders are intentional and are
-never substituted with fabricated screenshots.
-
-## 8.0 Beginning-of-execution evidence
-
-![Beginning-of-execution timestamp and institutional virtual-lab identity](submission/virtual_lab/01_start_timestamp.png)
-
-## 8.1 Package and environment evidence
-
-![Environment and package-version evidence](submission/virtual_lab/02_environment_versions.png)
-
-## 8.2 Timestamped training evidence
-
-![Timestamped training progress showing compact per-episode output](submission/virtual_lab/03_training_progress.png)
-
-## 8.3 Timestamped final outputs and plots
-
-![Timestamped final outputs and required plots](submission/virtual_lab/04_final_outputs_plots.png)
-
-## 8.4 Timestamped saved-file and checkpoint evidence
-
-The saved study artifacts are included with this submission and are
-listed below. The final-output screenshot above provides the timestamped virtual-lab
-completion evidence; this inventory avoids inserting a non-genuine replacement image.
-
-| Artifact class | Saved location |
-|---|---|
-| Per-episode ledgers and progress logs | `artifacts/metrics/`, `artifacts/logs/` |
-| Model checkpoints | `artifacts/checkpoints/` |
-| Fixed validation states | `artifacts/validation_states.npy` |
-| Evaluation data and summary | `artifacts/evaluation_episodes.csv`, `artifacts/evaluation_summary.csv` |
-| Plots and final comparison | `artifacts/plots/`, `artifacts/final_comparison.csv` |
-
-# 9. Conclusion
+# 8. Conclusion
 
 In the recorded single-seed experiment, hidden actuator failure increased the
 DQN-DDQN fixed-state Q-value gap from

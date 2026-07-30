@@ -773,32 +773,7 @@ using the same four-run design, followed by confidence intervals for final
 reward, safe-landing rate, Q-gap, and thruster use. A later failure-probability
 sweep could test whether any DDQN advantage scales with uncertainty.
 
-# 8. Virtual-lab evidence
-
-The following evidence must be genuine. Placeholders are intentional and are
-never substituted with fabricated screenshots.
-
-## 8.0 Beginning-of-execution evidence
-
-{start_screenshot}
-
-## 8.1 Package and environment evidence
-
-{version_screenshot}
-
-## 8.2 Timestamped training evidence
-
-{training_screenshot}
-
-## 8.3 Timestamped final outputs and plots
-
-{final_screenshot}
-
-## 8.4 Timestamped saved-file and checkpoint evidence
-
-{saved_files_screenshot}
-
-# 9. Conclusion
+# 8. Conclusion
 
 In the recorded single-seed experiment, hidden actuator failure increased the
 DQN-DDQN fixed-state Q-value gap from
