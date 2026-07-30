@@ -419,6 +419,23 @@ limitation is the single seed; paired multi-seed replication is the next
 improvement. This conclusion must be regenerated if the official virtual-lab
 run changes the recorded outputs.
 
+\newpage
+\begin{center}
+\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/01_start_timestamp.png}
+\end{center}
+\newpage
+\begin{center}
+\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/02_environment_versions.png}
+\end{center}
+\newpage
+\begin{center}
+\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/03_training_progress.png}
+\end{center}
+\newpage
+\begin{center}
+\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/04_final_outputs_plots.png}
+\end{center}
+
 # References {.unnumbered}
 
 1. Mnih, V. et al. (2015). Human-level control through deep reinforcement

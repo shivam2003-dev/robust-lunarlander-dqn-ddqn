@@ -430,6 +430,19 @@ completion evidence; this inventory avoids inserting a non-genuine replacement i
 | Fixed validation states | `artifacts/validation_states.npy` |
 | Evaluation data and summary | `artifacts/evaluation_episodes.csv`, `artifacts/evaluation_summary.csv` |
 | Plots and final comparison | `artifacts/plots/`, `artifacts/final_comparison.csv` |"""
+    bare_lab_screenshots = "\n".join(
+        "\\newpage\n\\begin{center}\n"
+        "\\includegraphics[width=0.96\\linewidth,height=0.88\\textheight,keepaspectratio]"
+        f"{{submission/virtual_lab/{filename}}}\n"
+        "\\end{center}"
+        for filename in (
+            "01_start_timestamp.png",
+            "02_environment_versions.png",
+            "03_training_progress.png",
+            "04_final_outputs_plots.png",
+        )
+        if (repo / "submission" / "virtual_lab" / filename).exists()
+    )
 
     report = rf"""---
 title: "Robust Reinforcement Learning under Stochastic Action Failure"
@@ -785,6 +798,8 @@ stronger in greedy evaluation, so no algorithm wins every metric. The main
 limitation is the single seed; paired multi-seed replication is the next
 improvement. This conclusion must be regenerated if the official virtual-lab
 run changes the recorded outputs.
+
+{bare_lab_screenshots}
 
 # References {{.unnumbered}}
 
