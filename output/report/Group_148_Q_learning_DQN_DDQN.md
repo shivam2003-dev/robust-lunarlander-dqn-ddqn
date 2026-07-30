@@ -421,19 +421,11 @@ run changes the recorded outputs.
 
 \newpage
 \begin{center}
-\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/01_start_timestamp.png}
-\end{center}
-\newpage
-\begin{center}
-\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/02_environment_versions.png}
-\end{center}
-\newpage
-\begin{center}
-\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/03_training_progress.png}
-\end{center}
-\newpage
-\begin{center}
-\includegraphics[width=0.96\linewidth,height=0.88\textheight,keepaspectratio]{submission/virtual_lab/04_final_outputs_plots.png}
+\includegraphics[width=0.47\linewidth,height=0.34\textheight,keepaspectratio]{submission/virtual_lab/01_start_timestamp.png}\hfill
+\includegraphics[width=0.47\linewidth,height=0.34\textheight,keepaspectratio]{submission/virtual_lab/02_environment_versions.png}
+\vspace{4mm}
+\includegraphics[width=0.47\linewidth,height=0.34\textheight,keepaspectratio]{submission/virtual_lab/03_training_progress.png}\hfill
+\includegraphics[width=0.47\linewidth,height=0.34\textheight,keepaspectratio]{submission/virtual_lab/04_final_outputs_plots.png}
 \end{center}
 
 # References {.unnumbered}

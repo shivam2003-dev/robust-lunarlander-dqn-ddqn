@@ -430,11 +430,8 @@ completion evidence; this inventory avoids inserting a non-genuine replacement i
 | Fixed validation states | `artifacts/validation_states.npy` |
 | Evaluation data and summary | `artifacts/evaluation_episodes.csv`, `artifacts/evaluation_summary.csv` |
 | Plots and final comparison | `artifacts/plots/`, `artifacts/final_comparison.csv` |"""
-    bare_lab_screenshots = "\n".join(
-        "\\newpage\n\\begin{center}\n"
-        "\\includegraphics[width=0.96\\linewidth,height=0.88\\textheight,keepaspectratio]"
-        f"{{submission/virtual_lab/{filename}}}\n"
-        "\\end{center}"
+    screenshot_files = [
+        filename
         for filename in (
             "01_start_timestamp.png",
             "02_environment_versions.png",
@@ -442,7 +439,16 @@ completion evidence; this inventory avoids inserting a non-genuine replacement i
             "04_final_outputs_plots.png",
         )
         if (repo / "submission" / "virtual_lab" / filename).exists()
-    )
+    ]
+    screenshot_cells = [
+        "\\includegraphics[width=0.47\\linewidth,height=0.34\\textheight,keepaspectratio]"
+        f"{{submission/virtual_lab/{filename}}}"
+        for filename in screenshot_files
+    ]
+    bare_lab_screenshots = "\\newpage\n\\begin{center}\n" + "\n\\vspace{4mm}\n".join(
+        "\\hfill\n".join(screenshot_cells[index : index + 2])
+        for index in range(0, len(screenshot_cells), 2)
+    ) + "\n\\end{center}"
 
     report = rf"""---
 title: "Robust Reinforcement Learning under Stochastic Action Failure"
